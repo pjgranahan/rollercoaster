@@ -1,0 +1,119 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- saved from url=(0062)http://www.flotcharts.org/flot/examples/interacting/index.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	
+	<title>Flot Examples: Interactivity</title>
+	<link href="./index_files/examples.css" rel="stylesheet" type="text/css">
+	<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="../../excanvas.min.js"></script><![endif]-->
+	<script language="javascript" type="text/javascript" src="./index_files/jquery.js"></script>
+	<script language="javascript" type="text/javascript" src="./index_files/jquery.flot.js"></script>
+	<script type="text/javascript">
+
+	$(function() {
+
+		var sin = [],
+			cos = [];
+
+		for (var i = 0; i < 14; i += 0.5) {
+			sin.push([i, Math.sin(i)]);
+			cos.push([i, Math.cos(i)]);
+		}
+
+		var plot = $.plot("#placeholder", [
+			{ data: sin, label: "sin(x)"},
+			{ data: cos, label: "cos(x)"}
+		], {
+			series: {
+				lines: {
+					show: true
+				},
+				points: {
+					show: true
+				}
+			},
+			grid: {
+				hoverable: true,
+				clickable: true
+			},
+			yaxis: {
+				min: -1.2,
+				max: 1.2
+			}
+		});
+
+		$("<div id='tooltip'></div>").css({
+			position: "absolute",
+			display: "none",
+			border: "1px solid #fdd",
+			padding: "2px",
+			"background-color": "#fee",
+			opacity: 0.80
+		}).appendTo("body");
+
+		$("#placeholder").bind("plothover", function (event, pos, item) {
+
+			if ($("#enablePosition:checked").length > 0) {
+				var str = "(" + pos.x.toFixed(2) + ", " + pos.y.toFixed(2) + ")";
+				$("#hoverdata").text(str);
+			}
+
+			if ($("#enableTooltip:checked").length > 0) {
+				if (item) {
+					var x = item.datapoint[0].toFixed(2),
+						y = item.datapoint[1].toFixed(2);
+
+					$("#tooltip").html(item.series.label + " of " + x + " = " + y)
+						.css({top: item.pageY+5, left: item.pageX+5})
+						.fadeIn(200);
+				} else {
+					$("#tooltip").hide();
+				}
+			}
+		});
+
+		$("#placeholder").bind("plotclick", function (event, pos, item) {
+			if (item) {
+				$("#clickdata").text(" - click point " + item.dataIndex + " in " + item.series.label);
+				plot.highlight(item.series, item.datapoint);
+			}
+		});
+
+		// Add the Flot version string to the footer
+
+		$("#footer").prepend("Flot " + $.plot.version + " &ndash; ");
+	});
+
+	</script>
+</head>
+<body>
+	<div id="header">
+		<h2>Interactivity</h2>
+	</div>
+
+	<div id="content">
+
+		<div class="demo-container">
+			<div id="placeholder" class="demo-placeholder" style="padding: 0px; position: relative;"><canvas class="flot-base" width="1636" height="826" style="direction: ltr; position: absolute; left: 0px; top: 0px; width: 818px; height: 413px;"></canvas><div class="flot-text" style="position: absolute; top: 0px; left: 0px; bottom: 0px; right: 0px; font-size: smaller; color: rgb(84, 84, 84);"><div class="flot-x-axis flot-x1-axis xAxis x1Axis" style="position: absolute; top: 0px; left: 0px; bottom: 0px; right: 0px; display: block;"><div class="flot-tick-label tickLabel" style="position: absolute; max-width: 102px; top: 395px; left: 25px; text-align: center;">0</div><div class="flot-tick-label tickLabel" style="position: absolute; max-width: 102px; top: 395px; left: 140px; text-align: center;">2</div><div class="flot-tick-label tickLabel" style="position: absolute; max-width: 102px; top: 395px; left: 256px; text-align: center;">4</div><div class="flot-tick-label tickLabel" style="position: absolute; max-width: 102px; top: 395px; left: 372px; text-align: center;">6</div><div class="flot-tick-label tickLabel" style="position: absolute; max-width: 102px; top: 395px; left: 488px; text-align: center;">8</div><div class="flot-tick-label tickLabel" style="position: absolute; max-width: 102px; top: 395px; left: 600px; text-align: center;">10</div><div class="flot-tick-label tickLabel" style="position: absolute; max-width: 102px; top: 395px; left: 716px; text-align: center;">12</div></div><div class="flot-y-axis flot-y1-axis yAxis y1Axis" style="position: absolute; top: 0px; left: 0px; bottom: 0px; right: 0px; display: block;"><div class="flot-tick-label tickLabel" style="position: absolute; top: 350px; left: 2px; text-align: right;">-1.0</div><div class="flot-tick-label tickLabel" style="position: absolute; top: 271px; left: 2px; text-align: right;">-0.5</div><div class="flot-tick-label tickLabel" style="position: absolute; top: 191px; left: 6px; text-align: right;">0.0</div><div class="flot-tick-label tickLabel" style="position: absolute; top: 111px; left: 6px; text-align: right;">0.5</div><div class="flot-tick-label tickLabel" style="position: absolute; top: 32px; left: 6px; text-align: right;">1.0</div></div></div><canvas class="flot-overlay" style="direction: ltr; position: absolute; left: 0px; top: 0px; width: 818px; height: 413px;" width="1636" height="826"></canvas><div class="legend"><div style="position: absolute; width: 66px; height: 47px; top: 13px; right: 13px; opacity: 0.85; background-color: rgb(255, 255, 255);"> </div><table style="position:absolute;top:13px;right:13px;;font-size:smaller;color:#545454"><tbody><tr><td class="legendColorBox"><div style="border:1px solid #ccc;padding:1px"><div style="width:4px;height:0;border:5px solid rgb(237,194,64);overflow:hidden"></div></div></td><td class="legendLabel">sin(x)</td></tr><tr><td class="legendColorBox"><div style="border:1px solid #ccc;padding:1px"><div style="width:4px;height:0;border:5px solid rgb(175,216,248);overflow:hidden"></div></div></td><td class="legendLabel">cos(x)</td></tr></tbody></table></div></div>
+		</div>
+
+		<p>One of the goals of Flot is to support user interactions. Try pointing and clicking on the points.</p>
+
+		<p>
+			<label><input id="enablePosition" type="checkbox" checked="checked">Show mouse position</label>
+			<span id="hoverdata">(2.47, -0.83)</span>
+			<span id="clickdata"> - click point 13 in sin(x)</span>
+		</p>
+
+		<p>A tooltip is easy to build with a bit of jQuery code and the data returned from the plot.</p>
+
+		<p><label><input id="enableTooltip" type="checkbox" checked="checked">Enable tooltip</label></p>
+
+	</div>
+
+	<div id="footer">Flot 0.8.3 – 
+		Copyright © 2007 - 2014 IOLA and Ole Laursen
+	</div>
+
+
+
+<div id="tooltip" style="position: absolute; border: 1px solid rgb(255, 221, 221); padding: 2px; opacity: 0.00963329536804831; top: 440px; left: 465px; display: block; background-color: rgb(255, 238, 238);">cos(x) of 2.50 = -0.80</div></body></html>
