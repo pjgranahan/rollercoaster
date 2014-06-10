@@ -1,123 +1,125 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<!-- saved from url=(0059)http://www.flotcharts.org/flot/examples/realtime/index.html -->
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	
-	<title>Flot Examples: Real-time updates</title>
-	<link href="./index_files/examples.css" rel="stylesheet" type="text/css">
-	<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="../../excanvas.min.js"></script><![endif]-->
-	<script language="javascript" type="text/javascript" src="./index_files/jquery.js"></script>
-	<script language="javascript" type="text/javascript" src="./index_files/jquery.flot.js"></script>
-	<script type="text/javascript">
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
 
-	$(function() {
+body {
+  background: #222;
+  font: 10px sans-serif;
+  margin: auto;
+  position: relative;
+  width: 960px;
+}
 
-		// We use an inline data source in the example, usually data would
-		// be fetched from a server
+text {
+  text-anchor: middle;
+}
 
-		var data = [],
-			totalPoints = 300;
+#credit {
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+  color: #ddd;
+}
 
-		function getRandomData() {
+#credit a {
+  color: #fff;
+  font-weight: bold;
+}
 
-			if (data.length > 0)
-				data = data.slice(1);
+</style>
+<div id="credit">Inspired by <a href="http://blog.pixelbreaker.com/polarclock/">pixelbreaker</a>.</div>
+<script src="http://d3js.org/d3.v3.js"></script>
+<script>
 
-			// Do a random walk
+var width = 960,
+    height = 800,
+    radius = Math.min(width, height) / 1.9,
+    spacing = .09;
 
-			while (data.length < totalPoints) {
+var formatSecond = d3.time.format("%S s"),
+    formatMinute = d3.time.format("%M m"),
+    formatHour = d3.time.format("%H h"),
+    formatDay = d3.time.format("%a"),
+    formatDate = d3.time.format("%d d"),
+    formatMonth = d3.time.format("%b");
 
-				var prev = data.length > 0 ? data[data.length - 1] : 50,
-					y = prev + Math.random() * 10 - 5;
+var color = d3.scale.linear()
+    .range(["hsl(-180,50%,50%)", "hsl(180,50%,50%)"])
+    .interpolate(interpolateHsl);
 
-				if (y < 0) {
-					y = 0;
-				} else if (y > 100) {
-					y = 100;
-				}
+var arc = d3.svg.arc()
+    .startAngle(0)
+    .endAngle(function(d) { return d.value * 2 * Math.PI; })
+    .innerRadius(function(d) { return d.index * radius; })
+    .outerRadius(function(d) { return (d.index + spacing) * radius; });
 
-				data.push(y);
-			}
+var svg = d3.select("body").append("svg")
+    .attr("width", width)
+    .attr("height", height)
+  .append("g")
+    .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
-			// Zip the generated y values with the x values
+var field = svg.selectAll("g")
+    .data(fields)
+  .enter().append("g");
 
-			var res = [];
-			for (var i = 0; i < data.length; ++i) {
-				res.push([i, data[i]])
-			}
+field.append("path");
 
-			return res;
-		}
+field.append("text");
 
-		// Set up the control widget
+d3.transition().duration(0).each(tick);
 
-		var updateInterval = 30;
-		$("#updateInterval").val(updateInterval).change(function () {
-			var v = $(this).val();
-			if (v && !isNaN(+v)) {
-				updateInterval = +v;
-				if (updateInterval < 1) {
-					updateInterval = 1;
-				} else if (updateInterval > 2000) {
-					updateInterval = 2000;
-				}
-				$(this).val("" + updateInterval);
-			}
-		});
+d3.select(self.frameElement).style("height", height + "px");
 
-		var plot = $.plot("#placeholder", [ getRandomData() ], {
-			series: {
-				shadowSize: 0	// Drawing is faster without shadows
-			},
-			yaxis: {
-				min: 0,
-				max: 100
-			},
-			xaxis: {
-				show: false
-			}
-		});
+function tick() {
+  field = field
+      .each(function(d) { this._value = d.value; })
+      .data(fields)
+      .each(function(d) { d.previousValue = this._value; });
 
-		function update() {
+  field.select("path")
+    .transition()
+      .ease("elastic")
+      .attrTween("d", arcTween)
+      .style("fill", function(d) { return color(d.value); });
 
-			plot.setData([getRandomData()]);
+  field.select("text")
+      .attr("dy", function(d) { return d.value < .5 ? "-.5em" : "1em"; })
+      .text(function(d) { return d.text; })
+    .transition()
+      .ease("elastic")
+      .attr("transform", function(d) {
+        return "rotate(" + 360 * d.value + ")"
+            + "translate(0," + -(d.index + spacing / 2) * radius + ")"
+            + "rotate(" + (d.value < .5 ? -90 : 90) + ")"
+      });
 
-			// Since the axes don't change, we don't need to call plot.setupGrid()
+  setTimeout(tick, 1000 - Date.now() % 1000);
+}
 
-			plot.draw();
-			setTimeout(update, updateInterval);
-		}
+function arcTween(d) {
+  var i = d3.interpolateNumber(d.previousValue, d.value);
+  return function(t) { d.value = i(t); return arc(d); };
+}
 
-		update();
+function fields() {
+  var now = new Date;
+  return [
+    {index: .7, text: formatSecond(now), value: now.getSeconds() / 60},
+    {index: .6, text: formatMinute(now), value: now.getMinutes() / 60},
+    {index: .5, text: formatHour(now),   value: now.getHours() / 24},
+    {index: .3, text: formatDay(now),    value: now.getDay() / 7},
+    {index: .2, text: formatDate(now),   value: (now.getDate() - 1) / (32 - new Date(now.getYear(), now.getMonth(), 32).getDate())},
+    {index: .1, text: formatMonth(now),  value: now.getMonth() / 12}
+  ];
+}
 
-		// Add the Flot version string to the footer
+// Avoid shortest-path interpolation.
+function interpolateHsl(a, b) {
+  var i = d3.interpolateString(a, b);
+  return function(t) {
+    return d3.hsl(i(t));
+  };
+}
 
-		$("#footer").prepend("Flot " + $.plot.version + " &ndash; ");
-	});
-
-	</script>
-</head>
-<body>
-
-	<div id="header">
-		<h2>Real-time updates</h2>
-	</div>
-
-	<div id="content">
-
-		<div class="demo-container">
-			<div id="placeholder" class="demo-placeholder" style="padding: 0px; position: relative;"><canvas class="flot-base" width="1636" height="826" style="direction: ltr; position: absolute; left: 0px; top: 0px; width: 818px; height: 413px;"></canvas><div class="flot-text" style="position: absolute; top: 0px; left: 0px; bottom: 0px; right: 0px; font-size: smaller; color: rgb(84, 84, 84);"><div class="flot-y-axis flot-y1-axis yAxis y1Axis" style="position: absolute; top: 0px; left: 0px; bottom: 0px; right: 0px; display: block;"><div class="flot-tick-label tickLabel" style="position: absolute; top: 397px; left: 16px; text-align: right;">0</div><div class="flot-tick-label tickLabel" style="position: absolute; top: 318px; left: 9px; text-align: right;">20</div><div class="flot-tick-label tickLabel" style="position: absolute; top: 238px; left: 9px; text-align: right;">40</div><div class="flot-tick-label tickLabel" style="position: absolute; top: 159px; left: 9px; text-align: right;">60</div><div class="flot-tick-label tickLabel" style="position: absolute; top: 79px; left: 9px; text-align: right;">80</div><div class="flot-tick-label tickLabel" style="position: absolute; top: 0px; left: 2px; text-align: right;">100</div></div></div><canvas class="flot-overlay" style="direction: ltr; position: absolute; left: 0px; top: 0px; width: 818px; height: 413px;" width="1636" height="826"></canvas></div>
-		</div>
-
-		<p>You can update a chart periodically to get a real-time effect by using a timer to insert the new data in the plot and redraw it.</p>
-
-		<p>Time between updates: <input id="updateInterval" type="text" value="" style="text-align: right; width:5em"> milliseconds</p>
-
-	</div>
-
-	<div id="footer">Flot 0.8.3 – 
-		Copyright © 2007 - 2014 IOLA and Ole Laursen
-	</div>
-
-
-
-</body></html>
+</script>
