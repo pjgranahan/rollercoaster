@@ -1,4 +1,0 @@
-rollercoaster
-=============
-
-Mobile game test
