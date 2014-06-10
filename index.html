@@ -1,8 +1,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<!-- saved from url=(0062)http://www.flotcharts.org/flot/examples/interacting/index.html -->
+<!-- saved from url=(0059)http://www.flotcharts.org/flot/examples/realtime/index.html -->
 <html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	
-	<title>Flot Examples: Interactivity</title>
+	<title>Flot Examples: Real-time updates</title>
 	<link href="./index_files/examples.css" rel="stylesheet" type="text/css">
 	<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="../../excanvas.min.js"></script><![endif]-->
 	<script language="javascript" type="text/javascript" src="./index_files/jquery.js"></script>
@@ -11,72 +11,83 @@
 
 	$(function() {
 
-		var sin = [],
-			cos = [];
+		// We use an inline data source in the example, usually data would
+		// be fetched from a server
 
-		for (var i = 0; i < 14; i += 0.5) {
-			sin.push([i, Math.sin(i)]);
-			cos.push([i, Math.cos(i)]);
+		var data = [],
+			totalPoints = 300;
+
+		function getRandomData() {
+
+			if (data.length > 0)
+				data = data.slice(1);
+
+			// Do a random walk
+
+			while (data.length < totalPoints) {
+
+				var prev = data.length > 0 ? data[data.length - 1] : 50,
+					y = prev + Math.random() * 10 - 5;
+
+				if (y < 0) {
+					y = 0;
+				} else if (y > 100) {
+					y = 100;
+				}
+
+				data.push(y);
+			}
+
+			// Zip the generated y values with the x values
+
+			var res = [];
+			for (var i = 0; i < data.length; ++i) {
+				res.push([i, data[i]])
+			}
+
+			return res;
 		}
 
-		var plot = $.plot("#placeholder", [
-			{ data: sin, label: "sin(x)"},
-			{ data: cos, label: "cos(x)"}
-		], {
-			series: {
-				lines: {
-					show: true
-				},
-				points: {
-					show: true
+		// Set up the control widget
+
+		var updateInterval = 30;
+		$("#updateInterval").val(updateInterval).change(function () {
+			var v = $(this).val();
+			if (v && !isNaN(+v)) {
+				updateInterval = +v;
+				if (updateInterval < 1) {
+					updateInterval = 1;
+				} else if (updateInterval > 2000) {
+					updateInterval = 2000;
 				}
-			},
-			grid: {
-				hoverable: true,
-				clickable: true
+				$(this).val("" + updateInterval);
+			}
+		});
+
+		var plot = $.plot("#placeholder", [ getRandomData() ], {
+			series: {
+				shadowSize: 0	// Drawing is faster without shadows
 			},
 			yaxis: {
-				min: -1.2,
-				max: 1.2
+				min: 0,
+				max: 100
+			},
+			xaxis: {
+				show: false
 			}
 		});
 
-		$("<div id='tooltip'></div>").css({
-			position: "absolute",
-			display: "none",
-			border: "1px solid #fdd",
-			padding: "2px",
-			"background-color": "#fee",
-			opacity: 0.80
-		}).appendTo("body");
+		function update() {
 
-		$("#placeholder").bind("plothover", function (event, pos, item) {
+			plot.setData([getRandomData()]);
 
-			if ($("#enablePosition:checked").length > 0) {
-				var str = "(" + pos.x.toFixed(2) + ", " + pos.y.toFixed(2) + ")";
-				$("#hoverdata").text(str);
-			}
+			// Since the axes don't change, we don't need to call plot.setupGrid()
 
-			if ($("#enableTooltip:checked").length > 0) {
-				if (item) {
-					var x = item.datapoint[0].toFixed(2),
-						y = item.datapoint[1].toFixed(2);
+			plot.draw();
+			setTimeout(update, updateInterval);
+		}
 
-					$("#tooltip").html(item.series.label + " of " + x + " = " + y)
-						.css({top: item.pageY+5, left: item.pageX+5})
-						.fadeIn(200);
-				} else {
-					$("#tooltip").hide();
-				}
-			}
-		});
-
-		$("#placeholder").bind("plotclick", function (event, pos, item) {
-			if (item) {
-				$("#clickdata").text(" - click point " + item.dataIndex + " in " + item.series.label);
-				plot.highlight(item.series, item.datapoint);
-			}
-		});
+		update();
 
 		// Add the Flot version string to the footer
 
@@ -86,27 +97,20 @@
 	</script>
 </head>
 <body>
+
 	<div id="header">
-		<h2>Interactivity</h2>
+		<h2>Real-time updates</h2>
 	</div>
 
 	<div id="content">
 
 		<div class="demo-container">
-			<div id="placeholder" class="demo-placeholder" style="padding: 0px; position: relative;"><canvas class="flot-base" width="1636" height="826" style="direction: ltr; position: absolute; left: 0px; top: 0px; width: 818px; height: 413px;"></canvas><div class="flot-text" style="position: absolute; top: 0px; left: 0px; bottom: 0px; right: 0px; font-size: smaller; color: rgb(84, 84, 84);"><div class="flot-x-axis flot-x1-axis xAxis x1Axis" style="position: absolute; top: 0px; left: 0px; bottom: 0px; right: 0px; display: block;"><div class="flot-tick-label tickLabel" style="position: absolute; max-width: 102px; top: 395px; left: 25px; text-align: center;">0</div><div class="flot-tick-label tickLabel" style="position: absolute; max-width: 102px; top: 395px; left: 140px; text-align: center;">2</div><div class="flot-tick-label tickLabel" style="position: absolute; max-width: 102px; top: 395px; left: 256px; text-align: center;">4</div><div class="flot-tick-label tickLabel" style="position: absolute; max-width: 102px; top: 395px; left: 372px; text-align: center;">6</div><div class="flot-tick-label tickLabel" style="position: absolute; max-width: 102px; top: 395px; left: 488px; text-align: center;">8</div><div class="flot-tick-label tickLabel" style="position: absolute; max-width: 102px; top: 395px; left: 600px; text-align: center;">10</div><div class="flot-tick-label tickLabel" style="position: absolute; max-width: 102px; top: 395px; left: 716px; text-align: center;">12</div></div><div class="flot-y-axis flot-y1-axis yAxis y1Axis" style="position: absolute; top: 0px; left: 0px; bottom: 0px; right: 0px; display: block;"><div class="flot-tick-label tickLabel" style="position: absolute; top: 350px; left: 2px; text-align: right;">-1.0</div><div class="flot-tick-label tickLabel" style="position: absolute; top: 271px; left: 2px; text-align: right;">-0.5</div><div class="flot-tick-label tickLabel" style="position: absolute; top: 191px; left: 6px; text-align: right;">0.0</div><div class="flot-tick-label tickLabel" style="position: absolute; top: 111px; left: 6px; text-align: right;">0.5</div><div class="flot-tick-label tickLabel" style="position: absolute; top: 32px; left: 6px; text-align: right;">1.0</div></div></div><canvas class="flot-overlay" style="direction: ltr; position: absolute; left: 0px; top: 0px; width: 818px; height: 413px;" width="1636" height="826"></canvas><div class="legend"><div style="position: absolute; width: 66px; height: 47px; top: 13px; right: 13px; opacity: 0.85; background-color: rgb(255, 255, 255);"> </div><table style="position:absolute;top:13px;right:13px;;font-size:smaller;color:#545454"><tbody><tr><td class="legendColorBox"><div style="border:1px solid #ccc;padding:1px"><div style="width:4px;height:0;border:5px solid rgb(237,194,64);overflow:hidden"></div></div></td><td class="legendLabel">sin(x)</td></tr><tr><td class="legendColorBox"><div style="border:1px solid #ccc;padding:1px"><div style="width:4px;height:0;border:5px solid rgb(175,216,248);overflow:hidden"></div></div></td><td class="legendLabel">cos(x)</td></tr></tbody></table></div></div>
+			<div id="placeholder" class="demo-placeholder" style="padding: 0px; position: relative;"><canvas class="flot-base" width="1636" height="826" style="direction: ltr; position: absolute; left: 0px; top: 0px; width: 818px; height: 413px;"></canvas><div class="flot-text" style="position: absolute; top: 0px; left: 0px; bottom: 0px; right: 0px; font-size: smaller; color: rgb(84, 84, 84);"><div class="flot-y-axis flot-y1-axis yAxis y1Axis" style="position: absolute; top: 0px; left: 0px; bottom: 0px; right: 0px; display: block;"><div class="flot-tick-label tickLabel" style="position: absolute; top: 397px; left: 16px; text-align: right;">0</div><div class="flot-tick-label tickLabel" style="position: absolute; top: 318px; left: 9px; text-align: right;">20</div><div class="flot-tick-label tickLabel" style="position: absolute; top: 238px; left: 9px; text-align: right;">40</div><div class="flot-tick-label tickLabel" style="position: absolute; top: 159px; left: 9px; text-align: right;">60</div><div class="flot-tick-label tickLabel" style="position: absolute; top: 79px; left: 9px; text-align: right;">80</div><div class="flot-tick-label tickLabel" style="position: absolute; top: 0px; left: 2px; text-align: right;">100</div></div></div><canvas class="flot-overlay" style="direction: ltr; position: absolute; left: 0px; top: 0px; width: 818px; height: 413px;" width="1636" height="826"></canvas></div>
 		</div>
 
-		<p>One of the goals of Flot is to support user interactions. Try pointing and clicking on the points.</p>
+		<p>You can update a chart periodically to get a real-time effect by using a timer to insert the new data in the plot and redraw it.</p>
 
-		<p>
-			<label><input id="enablePosition" type="checkbox" checked="checked">Show mouse position</label>
-			<span id="hoverdata">(2.47, -0.83)</span>
-			<span id="clickdata"> - click point 13 in sin(x)</span>
-		</p>
-
-		<p>A tooltip is easy to build with a bit of jQuery code and the data returned from the plot.</p>
-
-		<p><label><input id="enableTooltip" type="checkbox" checked="checked">Enable tooltip</label></p>
+		<p>Time between updates: <input id="updateInterval" type="text" value="" style="text-align: right; width:5em"> milliseconds</p>
 
 	</div>
 
@@ -116,4 +120,4 @@
 
 
 
-<div id="tooltip" style="position: absolute; border: 1px solid rgb(255, 221, 221); padding: 2px; opacity: 0.00963329536804831; top: 440px; left: 465px; display: block; background-color: rgb(255, 238, 238);">cos(x) of 2.50 = -0.80</div></body></html>
+</body></html>
