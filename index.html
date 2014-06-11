@@ -48,15 +48,6 @@
 			chart.render();
           
 		};
-		
-		var clearCanvas = function () {
-   			canvas.context.clearRect(0, 0, canvas.width, canvas.height);
-   			if(STX.isAndroid && !STX.is_chrome){
-      			var w=canvas.width;
-      			canvas.width=1;
-      			canvas.width=w;
-   			}
-		};
 
 		// generates first set of dataPoints
       	
@@ -65,11 +56,13 @@
 
 		// update chart after specified time. 
 		setInterval(function(){updateChart();}, updateInterval); 
-		setInterval(function(){clearCanvas();}, updateInterval); 
 
 	}
 	</script>
 	<script type="text/javascript" src="canvasjs.min.js"></script>
+	<script type="text/javascript">
+			$("#canvas").parents("*").css("overflow", "visible");
+	</script>
 </head>
 <body>
 	<div id="chartContainer" style="height: 300px; width: 100%;">
