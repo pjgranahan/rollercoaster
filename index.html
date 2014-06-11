@@ -28,7 +28,7 @@
 		var updateInterval = 30;
 		var dataLength = 200; // number of dataPoints visible at any point
 
-		var updateChart = function (count) {
+		function updateChart(count) {
 			count = count || 1;
 			// count is number of times loop runs to generate random dataPoints.
 			
@@ -50,7 +50,7 @@
 		};
 
 		// generates first set of dataPoints
-			updateChart(dataLength); 
+// 			updateChart(dataLength); 
       	
 
 		// update chart after specified time. 
