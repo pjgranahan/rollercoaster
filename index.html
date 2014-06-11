@@ -39,20 +39,22 @@
 				dps.shift();				
 			}
 			
-			chart.render();		
+			chart.render();
+          
 
 		};
 
 		// generates first set of dataPoints
       	
 		updateChart(dataLength); 
+      	
 
 		// update chart after specified time. 
-		setInterval(function(){updateChart();context.clearRect(0, 0, canvas.width, canvas.height);}, updateInterval); 
+		setInterval(function(){updateChart();renderer.setClearColorHex( 0xBBBBBB, 1 );}, updateInterval); 
 
 	}
 	</script>
-	<script type="text/javascript" src="/assets/script/canvasjs.min.js"></script>
+	<script type="text/javascript" src="canvasjs.min.js"></script>
 </head>
 <body>
 	<div id="chartContainer" style="height: 300px; width:100%;">
