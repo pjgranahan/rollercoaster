@@ -48,10 +48,6 @@
 			chart.render();
           
 		};
-		
-		window.onresize = function(event) {
-			document.location.reload(true);
-		}
 
 		// generates first set of dataPoints
       	
@@ -60,7 +56,9 @@
 
 		// update chart after specified time. 
 		setInterval(function(){updateChart();}, updateInterval); 
-
+setTimeout(function() {
+    $canvas.css('opacity', 1);
+}, 0);
 	}
 	</script>
 	<script type="text/javascript" src="canvasjs.min.js"></script>
