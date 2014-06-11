@@ -6,11 +6,19 @@
 	window.onload = function () {
 
 		var dps = []; // dataPoints
+		
+        CanvasJS.addColorSet("bitcoin_colors",
+                [//colorSet Array
+                "#FF9900"              
+                ]);
+
+            
 
 		var chart = new CanvasJS.Chart("chartContainer",{
 			title :{
-				text: "Live Random Data"
+				text: "Bitcoin Rollercoaster"
 			},			
+			colorSet: "bitcoin_colors",
 			data: [{
 				type: "line",
 				dataPoints: dps 
@@ -19,8 +27,8 @@
 
 		var xVal = 0;
 		var yVal = 100;	
-		var updateInterval = 20;
-		var dataLength = 500; // number of dataPoints visible at any point
+		var updateInterval = 30;
+		var dataLength = 200; // number of dataPoints visible at any point
 
 		var updateChart = function (count) {
 			count = count || 1;
