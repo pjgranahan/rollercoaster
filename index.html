@@ -3,7 +3,7 @@
 
 <head>
 	<script type="text/javascript">
-// 	window.onload = function () {
+	window.onload = function () {
 
 		var dps = []; // dataPoints
 		
@@ -49,21 +49,13 @@
           
 		};
 		
-		function bugWorkaround() {
-  canvas.style.opacity = 0.99;
-  setTimeout(function() {
-  canvas.style.opacity = 1;
-  }, 1);
-}
-
 		// generates first set of dataPoints
-// 			updateChart(dataLength); 
+			updateChart(dataLength); 
       	
 		// update chart after specified time. 
-		setInterval(function(){updateChart();}, updateInterval); 
-		setInterval(function(){bugWorkaround();}, updateInterval); 
+// 		setInterval(function(){updateChart();}, updateInterval); 
 
-// 	}
+	}
 	</script>
 	<script type="text/javascript" src="canvasjs.min.js"></script>
 </head>
