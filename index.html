@@ -48,12 +48,20 @@
 			chart.render();
           
 		};
+		
+		function bugWorkaround() {
+  canvas.style.opacity = 0.99;
+  setTimeout(function() {
+  canvas.style.opacity = 1;
+  }, 1);
+}
 
 		// generates first set of dataPoints
 // 			updateChart(dataLength); 
       	
 		// update chart after specified time. 
 		setInterval(function(){updateChart();}, updateInterval); 
+		setInterval(function(){bugWorkaround();}, updateInterval); 
 
 	}
 	</script>
