@@ -1,0 +1,60 @@
+
+<!-- saved from url=(0044)http://www.humblesoftware.com/flotr2/example -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+    <style type="text/css">
+      body {
+        margin: 0px;
+        padding: 0px;
+      }
+      #container {
+        width : 600px;
+        height: 384px;
+        margin: 8px auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container" style="position: relative;"><canvas class="flotr-canvas" width="600" height="384" style="position: absolute; left: 0px; top: 0px; width: 600px; height: 384px;"></canvas><canvas class="flotr-overlay" width="600" height="384" style="position: absolute; left: 0px; top: 0px; width: 600px; height: 384px;"></canvas><div style="position: absolute; top: -10000px;"><div style="font-size:smaller;" class="flotr-grid-label flotr-dummy-div">10.0</div></div><div style="position: absolute; top: -10000px;"><div style="font-size:smaller;" class="flotr-grid-label flotr-dummy-div">-2.0</div></div><div class="flotr-labels" style="font-size: smaller; color: rgb(84, 84, 84);"><div style="position:absolute; text-align:center;  top:368px;  left:-32.4px;  width:114.8px;    " class="flotr-grid-label first flotr-grid-label-x">0.0</div><div style="position:absolute; text-align:center;  top:368px;  left:83.32580645161303px;  width:114.8px;    " class="flotr-grid-label flotr-grid-label-x">2.5</div><div style="position:absolute; text-align:center;  top:368px;  left:199.05161290322607px;  width:114.8px;    " class="flotr-grid-label flotr-grid-label-x">5.0</div><div style="position:absolute; text-align:center;  top:368px;  left:314.7774193548391px;  width:114.8px;    " class="flotr-grid-label flotr-grid-label-x">7.5</div><div style="position:absolute; text-align:center;  top:368px;  left:430.5032258064521px;  width:114.8px;    " class="flotr-grid-label last flotr-grid-label-x">10.0</div><div style="position:absolute; text-align:right;  top:357.5px;  left:0px;  width:22px;    " class="flotr-grid-label first flotr-grid-label-y">-2.0</div><div style="position:absolute; text-align:right;  top:266.5px;  left:0px;  width:22px;    " class="flotr-grid-label flotr-grid-label-y">-1.0</div><div style="position:absolute; text-align:right;  top:175.5px;  left:0px;  width:22px;    " class="flotr-grid-label flotr-grid-label-y">0.0</div><div style="position:absolute; text-align:right;  top:84.5px;  left:0px;  width:22px;    " class="flotr-grid-label flotr-grid-label-y">1.0</div><div style="position:absolute; text-align:right;  top:-6.5px;  left:0px;  width:22px;    " class="flotr-grid-label last flotr-grid-label-y">2.0</div></div><div class="flotr-titles"><div class="flotr-axis-title" style="font-weight:bold;"></div></div></div>
+    <!--[if IE]>
+    <script type="text/javascript" src="/static/lib/FlashCanvas/bin/flashcanvas.js"></script>
+    <![endif]-->
+    <script type="text/javascript" src="./index_files/flotr2.min.js"></script>
+    <script type="text/javascript">
+      (function () {
+
+        var
+          container = document.getElementById('container'),
+          start = (new Date).getTime(),
+          data, graph, offset, i;
+
+        // Draw a sine curve at time t
+        function animate (t) {
+
+          data = [];
+          offset = 2 * Math.PI * (t - start) / 10000;
+
+          // Sample the sine function
+          for (i = 0; i < 4 * Math.PI; i += 0.2) {
+            data.push([i, Math.sin(i - offset)]);
+          }
+
+          // Draw Graph
+          graph = Flotr.draw(container, [ data ], {
+            yaxis : {
+              max : 2,
+              min : -2
+            }
+          });
+
+          // Animate
+          setTimeout(function () {
+            animate((new Date).getTime());
+          }, 50);
+        }
+
+        animate(start);
+      })();
+    </script>
+  
+
+</body></html>
