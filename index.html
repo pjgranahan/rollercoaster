@@ -3,6 +3,7 @@
 
 <head>
 	<script type="text/javascript">
+	
 	window.onload = function () {
 
 		var dps = []; // dataPoints
@@ -50,10 +51,19 @@
 		};
 		
 		// generates first set of dataPoints
-			updateChart(dataLength); 
+// 			updateChart(dataLength); 
       	
 		// update chart after specified time. 
-		setInterval(function(){updateChart();}, updateInterval); 
+// 		setInterval(function(){updateChart();}, updateInterval); 
+		
+		// Animate.
+function animate(highResTimestamp) {
+  requestAnimationFrame(animate);
+  updateChart();
+}
+
+// Start the animation.
+requestAnimationFrame(animate);
 
 	}
 	</script>
