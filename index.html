@@ -12,8 +12,6 @@
                 "#FF9900"              
                 ]);
 
-            
-
 		var chart = new CanvasJS.Chart("chartContainer",{
 			title :{
 				text: "Bitcoin Rollercoaster"
@@ -58,14 +56,14 @@
       	
 
 		// update chart after specified time. 
-		setInterval(function(){updateChart();}, updateInterval); 
+		setInterval(function(){updateChart();canvas.clearRect(0, 0, w, h);}, updateInterval); 
 
 	}
 	</script>
 	<script type="text/javascript" src="canvasjs.min.js"></script>
 </head>
 <body>
-	<div id="chartContainer" style="overflow-x: visible; height: 300px; width: 100%;">
+	<div id="chartContainer" style="height: 300px; width: 100%;">
 	</div>
 </body>
 </html>
