@@ -50,14 +50,14 @@
       	
 
 		// update chart after specified time. 
-		setInterval(function(){updateChart();renderer.setClearColorHex( 0xBBBBBB, 1 );}, updateInterval); 
+		setInterval(function(){updateChart();canvas.width = canvas.width; }, updateInterval); 
 
 	}
 	</script>
 	<script type="text/javascript" src="canvasjs.min.js"></script>
 </head>
 <body>
-	<div id="chartContainer" style="overflow-x: visible; height: 300px; width:100%;">
+	<div id="chartContainer" style="height: 300px; width:100%;">
 	</div>
 </body>
 </html>
