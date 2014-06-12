@@ -2,19 +2,33 @@
 <html>
 <head>
   <meta charset="utf-8" />
-  <title>Bitcoin Rollercoaster</title>
+  <!-- <title>Bitcoin Rollercoaster</title> -->
 </head>
+
 <body>
-<!--   <div>
-    <button id="ride" type="button">RIDE THE RIDE</button>
-  </div> -->
-  <button id="start">RIDE THE RIDE</button>
-  <button id="stop">STOP I'M GETTING SICK</button>
-	<div id="chartContainer" style="height: 300px; width: 100%;">
-	</div>
+
+  <div data-role="page" id="pageone">
+    <div data-role="header">
+      <h1>Rollercoaster</h1>
+    </div>
+
+    <div data-role="main" class="ui-content">
+      <div id="chartContainer" style="height: 200px; width: 100%;">
+      </div>
+    </div>
+
+    <div data-role="footer">
+      <button id="start">RIDE THE RIDE</button>
+      <button id="stop">STOP I'M GETTING SICK</button>
+    </div>
+  </div> 
+
+  <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.css">
+  <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+  <script src="http://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.js"></script>
   <script src="canvasjs.min.js"></script>
   <script src="jquery-2.1.1.min.js"></script>
-    <script type="text/javascript">
+  <script type="text/javascript">
   
     window.onload = function () {
 
@@ -26,9 +40,9 @@
               ]);
 
       var chart = new CanvasJS.Chart("chartContainer",{
-        title :{
-          text: "Bitcoin Rollercoaster"
-        },
+        // title :{
+        //   text: "Bitcoin Rollercoaster"
+        // },
         creditText: "",
         creditHref: "",      
         colorSet: "bitcoin_colors",
@@ -89,36 +103,23 @@
       function animate() {
         // alert("I am an alert box!");
         updateChart()
-        // chart.render()
         globalID = requestAnimationFrame(animate);
       }
-      // requestAnimationFrame(animate);
-
 
       $("#start").on("click", function() {
-        // alert("START");
         globalID = requestAnimationFrame(animate);
         $("#start").toggle()
         $("#stop").toggle()
       });
 
       $("#stop").on("click", function() {
-        // alert("STOP");
         cancelAnimationFrame(globalID);
         $("#start").toggle()
         $("#stop").toggle()
       });
       $("#stop").toggle()
-
-
-     // var runButton = document.getElementById('ride');
-
-     //  runButton.addEventListener('click', function() {
-     //      alert(dps[dps.length-1].y);
-     //  }, false);
-
-
     }
   </script>
+
 </body>
 </html>
