@@ -13,7 +13,7 @@
     </div>
 
     <div data-role="main" class="ui-content">
-      <div id="chartContainer" style="overflow-x: visible; height: 200px; width: 100%;">
+      <div id="chartContainer" style="overflow-x: visible; z-index:-1; height: 200px; width: 100%;">
       </div>
     </div>
 
@@ -127,8 +127,10 @@
 
       function animate() {
         // alert("I am an alert box!");
+        // $("#chartContainer").toggle()
         updateChart()
-        $("#chartContainer").width()
+        $("#chartContainer").toggle()
+        $("#chartContainer").toggle()
         globalID = requestAnimationFrame(animate);
       }
 
