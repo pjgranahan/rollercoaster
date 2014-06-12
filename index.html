@@ -15,11 +15,21 @@
     <div data-role="main" class="ui-content">
       <div id="chartContainer" style="overflow-x: visible; z-index:-1; height: 200px; width: 100%;">
       </div>
+
+      <div id="texts">
+        <div id="dollars" class="ui-content">
+          Dollars
+        </div>
+        <div id="bitcoins" class="ui-content">
+          Bitcoins
+        </div>
+      </div>
+      
     </div>
 
     <div data-role="footer">
-      <button id="start">RIDE THE RIDE</button>
-      <button id="stop">STOP I'M GETTING SICK</button>
+      <button id="start">RIDE THE RIDE - BUY</button>
+      <button id="stop">STOP I'M GETTING SICK - SELL</button>
     </div>
   </div> 
 
@@ -32,7 +42,10 @@
   
     window.onload = function () {
 
-      var dps = []; // dataPoints
+      var dps = [{
+            x: 0,
+            y: 100
+          }]; // dataPoints
       
       CanvasJS.addColorSet("bitcoin_colors",
               [//colorSet Array
@@ -53,13 +66,13 @@
         axisX:{
           // title: "Minutes",
           // gridThickness: 1,
-          tickLength: 0,
+          tickLength: 5,
           // prefix: "test"
           interval: 100,
         },
         axisY:{
           interlacedColor: "#F8F1E4",
-          tickLength: 10,
+          tickLength: 5,
           prefix: "$",
           gridThickness: 0
         }
@@ -88,15 +101,28 @@
         }
         
         chart.render();
-        // context.clearRect(0,0,1,1);
             
       };
-      
-      // generates first set of dataPoints
-        // updateChart(dataLength); 
-          
-      // update chart after specified time. 
-     // setInterval(function(){updateChart();}, updateInterval); 
+
+      var bitcoins = 0 // Capital in BTC
+      var dollars = 10000 // Capital in USD
+      var usd_to_btc = 100 // The ratio of USD to BTC. So $650:1 BTC = 650
+      var updateHoldings = function () {
+        usd_to_btc = dps[dps.length-1].y
+
+        if (bitcoins == 0) {
+          bitcoins = dollars / usd_to_btc
+          dollars = 0
+        } else if (dollars == 0) {
+          dollars = bitcoins * usd_to_btc
+          bitcoins = 0
+        }
+
+        // $("#bitcoins").text(dps[dps.length-1].y)
+        $("#bitcoins").text(bitcoins + " BTC")
+        $("#dollars").text(dollars + " USD")
+      };
+       
 
       var globalID;
 
@@ -129,26 +155,26 @@
         // alert("I am an alert box!");
         // $("#chartContainer").toggle()
         updateChart()
-        setTimeout(function() {
-          $("#chartContainer").css('opacity', Math.random());
-        }, 0);
-        // $("#chartContainer").toggle() // These two actually work!
-        // $("#chartContainer").toggle()
+        $("#chartContainer").toggle() // These two actually work!
+        $("#chartContainer").toggle()
         globalID = requestAnimationFrame(animate);
       }
 
       $("#start").on("click", function() {
-        globalID = requestAnimationFrame(animate);
+        // globalID = requestAnimationFrame(animate);
+        updateHoldings()
         $("#start").toggle()
         $("#stop").toggle()
       });
 
       $("#stop").on("click", function() {
-        cancelAnimationFrame(globalID);
+        // cancelAnimationFrame(globalID);
+        updateHoldings()
         $("#start").toggle()
         $("#stop").toggle()
       });
       $("#stop").toggle()
+      globalID = requestAnimationFrame(animate);
     }
   </script>
 
