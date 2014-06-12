@@ -129,8 +129,11 @@
         // alert("I am an alert box!");
         // $("#chartContainer").toggle()
         updateChart()
-        $("#chartContainer").toggle()
-        $("#chartContainer").toggle()
+        setTimeout(function() {
+          $canvas.css('opacity', 1);
+        }, 0);
+        // $("#chartContainer").toggle() // These two actually work!
+        // $("#chartContainer").toggle()
         globalID = requestAnimationFrame(animate);
       }
 
