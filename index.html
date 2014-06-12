@@ -1,115 +1,84 @@
 <!DOCTYPE HTML>
 <html>
-
 <head>
-	<script type="text/javascript">
-	
-	window.onload = function () {
-
-		var dps = []; // dataPoints
-		
-    CanvasJS.addColorSet("bitcoin_colors",
-            [//colorSet Array
-            "#FF9900"              
-            ]);
-
-		var chart = new CanvasJS.Chart("chartContainer",{
-			title :{
-				text: "Bitcoin Rollercoaster"
-			},			
-			colorSet: "bitcoin_colors",
-			data: [{
-				type: "line",
-				dataPoints: dps 
-			}]
-		});
-
-		var xVal = 0;
-		var yVal = 100;	
-		var updateInterval = 500;
-		var dataLength = 200; // number of dataPoints visible at any point
-
-		function updateChart(count) {
-			count = count || 1;
-			// count is number of times loop runs to generate random dataPoints.
-			
-			for (var j = 0; j < count; j++) {	
-				yVal = yVal +  Math.round(5 + Math.random() *(-5-5));
-				dps.push({
-					x: xVal,
-					y: yVal
-				});
-				xVal++;
-			};
-
-			if (dps.length > dataLength) {
-				dps.shift();				
-			}
-			
-			chart.render();
-          
-		};
-		
-		// generates first set of dataPoints
-			// updateChart(dataLength); 
-      	
-		// update chart after specified time. 
-// 		setInterval(function(){updateChart();}, updateInterval); 
-		
-(function() {
-    var lastTime = 0;
-    var vendors = ['ms', 'moz', 'webkit', 'o'];
-    for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
-        window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
-        window.cancelAnimationFrame = window[vendors[x]+'CancelAnimationFrame'] 
-                                   || window[vendors[x]+'CancelRequestAnimationFrame'];
-    }
- 
-    if (!window.requestAnimationFrame)
-        window.requestAnimationFrame = function(callback, element) {
-            var currTime = new Date().getTime();
-            var timeToCall = Math.max(0, 16 - (currTime - lastTime));
-            var id = window.setTimeout(function() { callback(currTime + timeToCall); }, 
-              timeToCall);
-            lastTime = currTime + timeToCall;
-            return id;
-        };
- 
-    if (!window.cancelAnimationFrame)
-        window.cancelAnimationFrame = function(id) {
-            clearTimeout(id);
-        };
-}());
-
-function bug_workaround() {
-  canvas.style.opacity = 0.99;
-  setTimeout(function() {
-  canvas.style.opacity = 1;
-  }, 1);
-}
-
-		// Animate.
-function animate(highResTimestamp) {
-  requestAnimationFrame(animate);
-  
-  updateChart();
-  bug_workaround();
-}
-
-// Start the animation.
-requestAnimationFrame(animate);
-
-  // document.getElementById("ride").addEventListener('click', updateChart(), false);
-
-	}
-	</script>
-	<script type="text/javascript" src="canvasjs.min.js"></script>
 </head>
 <body>
 <!--   <div>
     <button id="ride" type="button">RIDE THE RIDE</button>
   </div> -->
-	<div id="chartContainer" style="height: 300; width: 100%;">
+	<div id="chartContainer" style="height: 300px; width: 100%;">
 	</div>
+    <script type="text/javascript">
+  
+  window.onload = function () {
+
+    var dps = []; // dataPoints
+    
+    CanvasJS.addColorSet("bitcoin_colors",
+            [//colorSet Array
+            "#FF9900"              
+            ]);
+
+    var chart = new CanvasJS.Chart("chartContainer",{
+      title :{
+        text: "Bitcoin Rollercoaster"
+      },      
+      colorSet: "bitcoin_colors",
+      data: [{
+        type: "line",
+        dataPoints: dps 
+      }]
+    });
+
+    var xVal = 0;
+    var yVal = 100; 
+    var updateInterval = 20;
+    var dataLength = 100; // number of dataPoints visible at any point
+
+    var updateChart = function (count) {
+      count = count || 1;
+      // count is number of times loop runs to generate random dataPoints.
+      
+      for (var j = 0; j < count; j++) { 
+        yVal = yVal +  Math.round(5 + Math.random() *(-5-5));
+        dps.push({
+          x: xVal,
+          y: yVal
+        });
+        xVal++;
+      };
+
+      if (dps.length > dataLength) {
+        dps.shift();        
+      }
+      
+      chart.render();
+          
+    };
+    
+    // generates first set of dataPoints
+      // updateChart(dataLength); 
+        
+    // update chart after specified time. 
+   // setInterval(function(){updateChart();}, updateInterval); 
+
+
+   function repeatOften() {
+    updateChart()
+    requestAnimationFrame(repeatOften);
+  }
+  requestAnimationFrame(repeatOften);
+
+
+   // var runButton = document.getElementById('ride');
+
+   //  runButton.addEventListener('click', function() {
+   //      alert(dps[dps.length-1].y);
+   //  }, false);
+
+
+  }
+  </script>
+  <script type="text/javascript" src="canvasjs.min.js"></script>
 </body>
 </html>
