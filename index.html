@@ -8,44 +8,47 @@
 <body>
 
   <div data-role="page" id="pageone">
-    <div data-role="header">
+    <!-- <div data-role="header">
       <h1>Rollercoaster</h1>
-    </div>
+    </div> -->
 
     <div data-role="main" class="ui-content">
+
       <div id="chartContainer" style="overflow-x: visible; z-index:-1; height: 200px; width: 100%;">
       </div>
 
       <div id="texts">
         <div id="dollars" class="ui-content">
-          Dollars
+          You have 10000 USD
         </div>
         <div id="bitcoins" class="ui-content">
-          Bitcoins
+          You have 0 BTC
         </div>
       </div>
+
+      <form class="full-width-slider" id="sliderParent">
+        <!-- <label for="speedSlider" class="ui-hidden-accessible">Speed:</label> -->
+        <input type="range" id="speedSlider" data-track-theme="b" data-theme="b" min="1" max="50" value="1">
+      </form>
       
     </div>
 
     <div data-role="footer">
-      <button id="start">RIDE THE RIDE - BUY</button>
-      <button id="stop">STOP I'M GETTING SICK - SELL</button>
+      <button id="start">HOP ON - BUY</button>
+      <button id="stop">GET OFF - SELL</button>
     </div>
   </div> 
 
-  <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.css">
-  <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
-  <script src="http://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.js"></script>
-  <script src="canvasjs.min.js"></script>
-  <script src="jquery-2.1.1.min.js"></script>
+  <link rel="stylesheet" href="assets/jquery-mobile/jquery.mobile-1.4.2.css">
+  <script src="assets/jquery-1.10.2.min.js"></script>
+  <script src="assets/jquery-mobile/jquery.mobile-1.4.2.min.js"></script>
+  <script src="assets/canvasjs.min.js"></script>
+  <script src="assets/jquery-2.1.1.min.js"></script>
   <script type="text/javascript">
   
     window.onload = function () {
 
-      var dps = [{
-            x: 0,
-            y: 100
-          }]; // dataPoints
+      var dps = []; // dataPoints
       
       CanvasJS.addColorSet("bitcoin_colors",
               [//colorSet Array
@@ -61,14 +64,21 @@
         colorSet: "bitcoin_colors",
         data: [{
           type: "line",
-          dataPoints: dps 
+          dataPoints: dps,
+          toolTipContent: "${y}",
+          lineThickness: 1,
+          markerSize: 2,
         }],
+        toolTip:{
+          animationEnabled: false,
+        }, 
         axisX:{
           // title: "Minutes",
           // gridThickness: 1,
           tickLength: 5,
           // prefix: "test"
           interval: 100,
+          prefix: "minute "
         },
         axisY:{
           interlacedColor: "#F8F1E4",
@@ -80,18 +90,21 @@
 
       var xVal = 0;
       var yVal = 100; 
-      var updateInterval = 20;
-      var dataLength = 50; // number of dataPoints visible at any point
+      var updateInterval = 1000;
+      var dataLength = 100; // number of dataPoints visible at any point
+      var color = 'orange';
+      var markerSize = 2
 
       var updateChart = function (count) {
-        count = count || 1;
-        // count is number of times loop runs to generate random dataPoints.
+        count = count || 1; // count is number of times loop runs to generate random dataPoints.
         
         for (var j = 0; j < count; j++) { 
-          yVal = yVal +  Math.round(5 + Math.random() *(-5-5));
+          yVal = Math.max(yVal +  Math.round(5 + Math.random() *(-5-5)), 0);
           dps.push({
             x: xVal,
-            y: yVal
+            y: yVal,
+            color: color,
+            markerSize: markerSize,
           });
           xVal++;
         };
@@ -101,6 +114,9 @@
         }
         
         chart.render();
+
+        color = 'orange';
+        markerSize = 2;
             
       };
 
@@ -119,10 +135,9 @@
         }
 
         // $("#bitcoins").text(dps[dps.length-1].y)
-        $("#bitcoins").text(bitcoins + " BTC")
-        $("#dollars").text(dollars + " USD")
+        $("#bitcoins").text("You have " + bitcoins + " BTC")
+        $("#dollars").text("You have " + dollars + " USD")
       };
-       
 
       var globalID;
 
@@ -154,28 +169,39 @@
       function animate() {
         // alert("I am an alert box!");
         // $("#chartContainer").toggle()
-        updateChart()
-        $("#chartContainer").toggle() // These two actually work!
-        $("#chartContainer").toggle()
-        globalID = requestAnimationFrame(animate);
+        updateInterval = 1000 / $("#speedSlider").val(); // Should really be a slider event, but it wasn't working...
+        updateChart();
+        $("#chartContainer").toggle(); // These two actually work!
+        $("#chartContainer").toggle();
+        setTimeout(function() {
+          globalID = requestAnimationFrame(animate);
+        }, updateInterval);
+        
       }
 
       $("#start").on("click", function() {
         // globalID = requestAnimationFrame(animate);
-        updateHoldings()
-        $("#start").toggle()
-        $("#stop").toggle()
+        color = 'green';
+        markerSize = 5;
+        updateHoldings();
+        $("#start").toggle();
+        $("#stop").toggle();
       });
 
       $("#stop").on("click", function() {
         // cancelAnimationFrame(globalID);
-        updateHoldings()
-        $("#start").toggle()
-        $("#stop").toggle()
+        color = 'red';
+        markerSize = 5;
+        updateHoldings();
+        $("#start").toggle();
+        $("#stop").toggle();
       });
-      $("#stop").toggle()
+
+
+      $("#stop").toggle();
+      updateChart(dataLength);
       globalID = requestAnimationFrame(animate);
-    }
+    } 
   </script>
 
 </body>
