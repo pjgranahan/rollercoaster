@@ -14,32 +14,37 @@
 
     <div data-role="main" class="ui-content">
 
+
+
       <div id="chartContainer" style="overflow-x: visible; z-index:-1; height: 200px; width: 100%;">
       </div>
 
-      <div id="texts">
-        <div id="dollars" class="ui-content">
-          You have 10000 USD
-        </div>
-        <div id="bitcoins" class="ui-content">
-          You have 0 BTC
-        </div>
+      <div id="texts" class="ui-content">
+        <p style="text-align:center">
+          <font color="gray"><i>You own: </i></font><font color="green"><strong id="dollars" color="">10000.00 USD</strong></font><font color="orange"><i id="bitcoins">100.00 BTC</i></font>
+        </p>
+        <p style="text-align:center">
+          <font color="+timeLeftColor+" id="timeLeft">1000</font> minutes left to trade!
+        </p>
       </div>
 
+      <button id="start" data-theme="c">HOP ON - BUY</button>
+      <button id="stop" data-theme="b">GET OFF - SELL</button>
+
       <form class="full-width-slider" id="sliderParent">
-        <!-- <label for="speedSlider" class="ui-hidden-accessible">Speed:</label> -->
-        <input type="range" id="speedSlider" data-track-theme="b" data-theme="b" min="1" max="50" value="1">
+        <label for="speedSlider" class="ui-hidden-accessible">Speed:</label>
+        <input type="range" id="speedSlider" data-track-theme="a" data-theme="a" min="1" max="75" value="1">
       </form>
-      
+
+      <p style="text-align:center" id="profit_container">
+            <font color="gray">Profit: </font><font color="black" id="profit">0 BTC</font>
+      </p>
     </div>
 
-    <div data-role="footer">
-      <button id="start">HOP ON - BUY</button>
-      <button id="stop">GET OFF - SELL</button>
-    </div>
   </div> 
 
   <link rel="stylesheet" href="assets/jquery-mobile/jquery.mobile-1.4.2.css">
+  <link rel="stylesheet" href="assets/rollercoaster.css"> <!-- order matters - this css overwrites the previous one -->
   <script src="assets/jquery-1.10.2.min.js"></script>
   <script src="assets/jquery-mobile/jquery.mobile-1.4.2.min.js"></script>
   <script src="assets/canvasjs.min.js"></script>
@@ -63,7 +68,7 @@
         creditHref: "",      
         colorSet: "bitcoin_colors",
         data: [{
-          type: "line",
+          type: "spline", // bubble? 
           dataPoints: dps,
           toolTipContent: "${y}",
           lineThickness: 1,
@@ -116,28 +121,33 @@
         chart.render();
 
         color = 'orange';
-        markerSize = 2;
+        markerSize = 1;
             
       };
 
-      var bitcoins = 0 // Capital in BTC
-      var dollars = 10000 // Capital in USD
-      var usd_to_btc = 100 // The ratio of USD to BTC. So $650:1 BTC = 650
-      var updateHoldings = function () {
-        usd_to_btc = dps[dps.length-1].y
+      var bitcoins = 0; // Capital in BTC
+      var dollars = 10000; // Capital in USD
+      var usd_to_btc = 100; // The ratio of USD to BTC. So $650:1 BTC = 650
+      var btc_to_usd = 1/usd_to_btc;
+      var exchange_worth = function(amount, exchange_rate) {
+        return amount * exchange_rate;
+      }
 
+      var updateHoldings = function () {
         if (bitcoins == 0) {
-          bitcoins = dollars / usd_to_btc
-          dollars = 0
+          bitcoins = dollars / usd_to_btc;
+          dollars = 0;
         } else if (dollars == 0) {
-          dollars = bitcoins * usd_to_btc
-          bitcoins = 0
+          dollars = bitcoins * usd_to_btc;
+          bitcoins = 0;
         }
 
         // $("#bitcoins").text(dps[dps.length-1].y)
-        $("#bitcoins").text("You have " + bitcoins + " BTC")
-        $("#dollars").text("You have " + dollars + " USD")
+        $("#bitcoins").text(bitcoins.toFixed(2) + " BTC");
+        $("#dollars").text(dollars.toFixed(2) + " USD");
       };
+
+
 
       var globalID;
 
@@ -171,35 +181,53 @@
         // $("#chartContainer").toggle()
         updateInterval = 1000 / $("#speedSlider").val(); // Should really be a slider event, but it wasn't working...
         updateChart();
+
+        usd_to_btc = Math.max(dps[dps.length-1].y, 1); // dirty dirty hack to avoid infinity values 
+        btc_to_usd = 1/usd_to_btc;
+
+        timeLeft = 1000 - dps[dps.length-1].x;
+        $("#timeLeft").text(timeLeft);
+
         $("#chartContainer").toggle(); // These two actually work!
-        $("#chartContainer").toggle();
-        setTimeout(function() {
-          globalID = requestAnimationFrame(animate);
-        }, updateInterval);
+        $("#chartContainer").toggle(); // They redraw the canvas on android
+        if (timeLeft > 0) {
+          setTimeout(function() {
+            globalID = requestAnimationFrame(animate);
+          }, updateInterval);
+        } else {
+          $("#profit").text(dollars + exchange_worth(bitcoins, usd_to_btc) - 10000); //update profit
+          $("#profit_container").toggle();
+        }
         
       }
 
       $("#start").on("click", function() {
         // globalID = requestAnimationFrame(animate);
         color = 'green';
-        markerSize = 5;
+        markerSize = 6;
         updateHoldings();
         $("#start").toggle();
         $("#stop").toggle();
+        $("#dollars").toggle();
+        $("#bitcoins").toggle();
       });
 
       $("#stop").on("click", function() {
         // cancelAnimationFrame(globalID);
         color = 'red';
-        markerSize = 5;
+        markerSize = 6;
         updateHoldings();
         $("#start").toggle();
         $("#stop").toggle();
+        $("#dollars").toggle();
+        $("#bitcoins").toggle();
       });
 
 
       $("#stop").toggle();
-      updateChart(dataLength);
+      $("#bitcoins").toggle();
+      $("#profit_container").toggle();
+      // updateChart(dataLength);
       globalID = requestAnimationFrame(animate);
     } 
   </script>
