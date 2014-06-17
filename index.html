@@ -3,20 +3,19 @@
 <head>
   <meta charset="utf-8" />
   <!-- <title>Bitcoin Rollercoaster</title> -->
+  <meta name="viewport" content="width=device-width, initial-scale=1"> 
 </head>
 
 <body>
 
-  <div data-role="page" id="pageone">
-    <!-- <div data-role="header">
-      <h1>Rollercoaster</h1>
-    </div> -->
+  <div data-role="page" id="mainPage">
+
+    <div data-role="header" data-theme="e">
+      <h1>Bitcoin Roller Coaster</h1>
+    </div>
 
     <div data-role="main" class="ui-content">
-
-
-
-      <div id="chartContainer" style="overflow-x: visible; z-index:-1; height: 200px; width: 100%;">
+      <div id="chartContainer" style="height: 200px; width: 100%;">
       </div>
 
       <div id="texts" class="ui-content">
@@ -24,7 +23,7 @@
           <font color="gray"><i>You own: </i></font><font color="green"><strong id="dollars" color="">10000.00 USD</strong></font><font color="orange"><i id="bitcoins">100.00 BTC</i></font>
         </p>
         <p style="text-align:center">
-          <font color="+timeLeftColor+" id="timeLeft">1000</font> minutes left to trade!
+          <font color="green" id="timeLeft">1000</font> minutes left to trade!
         </p>
       </div>
 
@@ -36,19 +35,34 @@
         <input type="range" id="speedSlider" data-track-theme="a" data-theme="a" min="1" max="75" value="1">
       </form>
 
-      <p style="text-align:center" id="profit_container">
-            <font color="gray">Profit: </font><font color="black" id="profit">0 BTC</font>
-      </p>
+      <!-- "Popup" profit page - must be on the same page to work in the popup context -->
+      <div id="profitPage" data-role="popup" data-inline="true" data-position-to="window" data-corners="true" data-shadow="true" data-iconshadow="true" class="ui-content" data-transition="slidedown" data-dismissible="false">  
+
+        <div data-role="header" data-theme="e">
+          <h1>Profits!</h1>
+        </div><!-- /header -->
+
+        <div data-role="content" data-theme="d">  
+          <p style="text-align:center" id="profit_container">
+            <font color="black" id="profit">0 BTC</font>
+          </p> 
+          <a href="#" data-rel="back" data-role="button" data-inline="true" data-icon="back" id="backButton">I wanna ride again!</a></p> 
+        </div><!-- /content -->
+  
+      </div>
+
     </div>
 
   </div> 
+
+     
 
   <link rel="stylesheet" href="assets/jquery-mobile/jquery.mobile-1.4.2.css">
   <link rel="stylesheet" href="assets/rollercoaster.css"> <!-- order matters - this css overwrites the previous one -->
   <script src="assets/jquery-1.10.2.min.js"></script>
   <script src="assets/jquery-mobile/jquery.mobile-1.4.2.min.js"></script>
   <script src="assets/canvasjs.min.js"></script>
-  <script src="assets/jquery-2.1.1.min.js"></script>
+  <!-- <script src="assets/jquery-2.1.1.min.js"></script> -->
   <script type="text/javascript">
   
     window.onload = function () {
@@ -98,7 +112,8 @@
       var updateInterval = 1000;
       var dataLength = 100; // number of dataPoints visible at any point
       var color = 'orange';
-      var markerSize = 2
+      var markerSize = 2;
+      var timeLeft = 100;
 
       var updateChart = function (count) {
         count = count || 1; // count is number of times loop runs to generate random dataPoints.
@@ -131,7 +146,7 @@
       var btc_to_usd = 1/usd_to_btc;
       var exchange_worth = function(amount, exchange_rate) {
         return amount * exchange_rate;
-      }
+      };
 
       var updateHoldings = function () {
         if (bitcoins == 0) {
@@ -140,7 +155,7 @@
         } else if (dollars == 0) {
           dollars = bitcoins * usd_to_btc;
           bitcoins = 0;
-        }
+        };
 
         // $("#bitcoins").text(dps[dps.length-1].y)
         $("#bitcoins").text(bitcoins.toFixed(2) + " BTC");
@@ -176,6 +191,21 @@
               };
       }());
 
+
+
+      // Color conversions
+      function componentToHex(c) {
+          var hex = c.toString(16);
+          return hex.length == 1 ? "0" + hex : hex;
+      };
+
+      function rgbToHex(r, g, b) {
+          return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+      };
+
+
+
+      // Animations
       function animate() {
         // alert("I am an alert box!");
         // $("#chartContainer").toggle()
@@ -185,19 +215,24 @@
         usd_to_btc = Math.max(dps[dps.length-1].y, 1); // dirty dirty hack to avoid infinity values 
         btc_to_usd = 1/usd_to_btc;
 
+
+        timeLeftColor = rgbToHex(255 * (1000 - timeLeft) / 1000, 255 * timeLeft / 1000, 0);
         timeLeft = 1000 - dps[dps.length-1].x;
         $("#timeLeft").text(timeLeft);
+        $("#timeLeft").css('color', timeLeftColor);
 
         $("#chartContainer").toggle(); // These two actually work!
         $("#chartContainer").toggle(); // They redraw the canvas on android
+
         if (timeLeft > 0) {
-          setTimeout(function() {
-            globalID = requestAnimationFrame(animate);
-          }, updateInterval);
+          setTimeout(function() {globalID = requestAnimationFrame(animate);}, updateInterval);
         } else {
-          $("#profit").text(dollars + exchange_worth(bitcoins, usd_to_btc) - 10000); //update profit
-          $("#profit_container").toggle();
-        }
+          $("#profit").text((dollars + exchange_worth(bitcoins, usd_to_btc) - 10000) + " USD"); //update profit
+          // $("#popupLink").click(); // clicks the hidden link and triggers the popup
+          $("#profitPage").popup();
+          $("#profitPage").popup("open");
+          // $.mobile.changePage('#profitPage', 'pop', false, false);
+        };
         
       }
 
@@ -223,11 +258,42 @@
         $("#bitcoins").toggle();
       });
 
+      $("#backButton").on("click", function() {
+        location.reload();
+      });
 
-      $("#stop").toggle();
-      $("#bitcoins").toggle();
-      $("#profit_container").toggle();
+      $( "#profitPage" ).bind({
+         popupafterclose: function(event, ui) {
+          resetGame();
+         }
+      });
+
+
       // updateChart(dataLength);
+      // globalID = requestAnimationFrame(animate);
+      function resetGame() {
+        dps = []; // dataPoints
+        timeLeft = 1000;  
+
+        xVal = 0;
+        yVal = 100; 
+        updateInterval = 1000;
+        dataLength = 100; // number of dataPoints visible at any point
+        color = 'orange';
+        markerSize = 2;
+
+        bitcoins = 0; // Capital in BTC
+        dollars = 10000; // Capital in USD
+        usd_to_btc = 100; // The ratio of USD to BTC. So $650:1 BTC = 650
+        btc_to_usd = 1/usd_to_btc;
+
+        $("#stop").hide();
+        $("#bitcoins").hide();
+        setTimeout(function() {globalID = requestAnimationFrame(animate);}, updateInterval);
+      };
+
+      $("#stop").hide();
+      $("#bitcoins").hide();
       globalID = requestAnimationFrame(animate);
     } 
   </script>
