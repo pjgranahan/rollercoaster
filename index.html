@@ -1,302 +1,330 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-  <meta charset="utf-8" />
-  <!-- <title>Bitcoin Rollercoaster</title> -->
-  <meta name="viewport" content="width=device-width, initial-scale=1"> 
+    <meta charset="utf-8"/>
+    <title>Bitcoin Roller Coaster</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 
 <body>
 
-  <div data-role="page" id="mainPage">
+<div data-role="page" id="mainPage">
 
     <div data-role="header" data-theme="e">
-      <h1>Bitcoin Roller Coaster</h1>
+        <h1>Bitcoin Roller Coaster</h1>
     </div>
 
     <div data-role="main" class="ui-content">
-      <div id="chartContainer" style="height: 200px; width: 100%;">
-      </div>
+        <div id="chartContainer" style="height: 400px; width: 100%;">
+        </div>
 
-      <div id="texts" class="ui-content">
-        <p style="text-align:center">
-          <font color="gray"><i>You own: </i></font><font color="green"><strong id="dollars" color="">10000.00 USD</strong></font><font color="orange"><i id="bitcoins">100.00 BTC</i></font>
-        </p>
-        <p style="text-align:center">
-          <font color="green" id="timeLeft">1000</font> minutes left to trade!
-        </p>
-      </div>
+        <div id="texts" class="ui-content">
+            <p style="text-align:center">
+                <font color="gray"><i>You own: </i></font>
+                    <font color="green"><strong id="dollars" color="">10000.00 USD</strong></font>
+                    <font color="orange"><i id="bitcoins">100.00 BTC</i></font>
+            </p>
 
-      <button id="start" data-theme="c">HOP ON - BUY</button>
-      <button id="stop" data-theme="b">GET OFF - SELL</button>
+            <p style="text-align:center">
+                <font color="green" id="timeLeft">1000</font> minutes left to trade!
+            </p>
+        </div>
 
-      <form class="full-width-slider" id="sliderParent">
-        <label for="speedSlider" class="ui-hidden-accessible">Speed:</label>
-        <input type="range" id="speedSlider" data-track-theme="a" data-theme="a" min="1" max="75" value="1">
-      </form>
+        <button id="start" data-theme="c">HOP ON - BUY</button>
+        <button id="stop" data-theme="b">GET OFF - SELL</button>
 
-      <!-- "Popup" profit page - must be on the same page to work in the popup context -->
-      <div id="profitPage" data-role="popup" data-inline="true" data-position-to="window" data-corners="true" data-shadow="true" data-iconshadow="true" class="ui-content" data-transition="slidedown" data-dismissible="false">  
+        <!--<form class="full-width-slider" id="sliderParent">-->
+            <!--<label for="speedSlider" class="ui-hidden-accessible">Speed:</label>-->
+            <!--<input type="range" id="speedSlider" data-track-theme="a" data-theme="a" min="1" max="75" value="1">-->
+        <!--</form>-->
 
-        <div data-role="header" data-theme="e">
-          <h1>Profits!</h1>
-        </div><!-- /header -->
+        <!-- "Popup" intro page - must be on the same page to work in the popup context -->
+        <div id="introPage" data-role="popup" data-inline="true" data-position-to="window" data-corners="true"
+             data-shadow="true" data-iconshadow="true" class="ui-content" data-transition="slidedown"
+             data-dismissible="false">
 
-        <div data-role="content" data-theme="d">  
-          <p style="text-align:center" id="profit_container">
-            <font color="black" id="profit">0 BTC</font>
-          </p> 
-          <a href="#" data-rel="back" data-role="button" data-inline="true" data-icon="back" id="backButton">I wanna ride again!</a></p> 
-        </div><!-- /content -->
-  
-      </div>
+            <!--<div data-role="header" data-theme="e">-->
+                <!--<h1>Welcome to the Bitcoin Roller Coaster!</h1>-->
+            <!--</div>-->
+            <!-- /header -->
+
+            <div data-role="content" data-theme="d">
+                <p style="text-align:center">
+                    Do you need more Bitcoin volatility in your life?
+                </p>
+                <p style="text-align:center" >
+                    Crave all the thrilling losses of day-trading, with none of reward?
+                </p>
+                <p style="text-align:center">
+                    The Bitcoin Roller Coaster is for you!
+                </p>
+                <p style="text-align:center">
+                    <img src="images/bitcoin-roller-coaster.gif" alt="To the moon!!! ┗(°0°)┛" height="100px" width="100px" >
+                </p>
+
+                <a href="#" data-rel="button" data-role="button" data-inline="false" id="introCloseButton">I want to take a ride!</a>
+            </div>
+            <!-- /content -->
+        </div>
+
+        <!-- "Popup" profit page - must be on the same page to work in the popup context -->
+        <div id="profitPage" data-role="popup" data-inline="true" data-position-to="window" data-corners="true"
+             data-shadow="true" data-iconshadow="true" class="ui-content" data-transition="slidedown"
+             data-dismissible="false">
+
+            <div data-role="header" data-theme="e">
+                <h1>Profits!</h1>
+            </div>
+            <!-- /header -->
+
+            <div data-role="content" data-theme="d">
+                <p style="text-align:center" id="profit_container">
+                    <font color="black" id="profit">0 BTC</font>
+                </p>
+                <a href="#" data-rel="back" data-role="button" data-inline="false" data-icon="back" id="profitCloseButton">I want to ride again!</a>
+            </div>
+            <!-- /content -->
+        </div>
 
     </div>
+</div>
 
-  </div> 
 
-     
+<link rel="stylesheet" href="assets/jquery-mobile/jquery.mobile-1.4.2.css">
+<link rel="stylesheet" href="assets/rollercoaster.css">
+<!-- order matters - this css overwrites the previous one -->
+<script src="assets/jquery-1.10.2.min.js"></script>
+<script src="assets/jquery-mobile/jquery.mobile-1.4.2.min.js"></script>
+<script src="assets/canvasjs-1.5.1/canvasjs.min.js"></script>
+<!-- <script src="assets/jquery-2.1.1.min.js"></script> -->
 
-  <link rel="stylesheet" href="assets/jquery-mobile/jquery.mobile-1.4.2.css">
-  <link rel="stylesheet" href="assets/rollercoaster.css"> <!-- order matters - this css overwrites the previous one -->
-  <script src="assets/jquery-1.10.2.min.js"></script>
-  <script src="assets/jquery-mobile/jquery.mobile-1.4.2.min.js"></script>
-  <script src="assets/canvasjs.min.js"></script>
-  <!-- <script src="assets/jquery-2.1.1.min.js"></script> -->
-  <script type="text/javascript">
-  
-    window.onload = function () {
 
-      var dps = []; // dataPoints
-      
-      CanvasJS.addColorSet("bitcoin_colors",
-              [//colorSet Array
-              "#FF9900"              
-              ]);
+<script type="text/javascript">
 
-      var chart = new CanvasJS.Chart("chartContainer",{
-        // title :{
-        //   text: "Bitcoin Rollercoaster"
-        // },
-        creditText: "",
-        creditHref: "",      
-        colorSet: "bitcoin_colors",
-        data: [{
-          type: "spline", // bubble? 
-          dataPoints: dps,
-          toolTipContent: "${y}",
-          lineThickness: 1,
-          markerSize: 2,
-        }],
-        toolTip:{
-          animationEnabled: false,
-        }, 
-        axisX:{
-          // title: "Minutes",
-          // gridThickness: 1,
-          tickLength: 5,
-          // prefix: "test"
-          interval: 100,
-          prefix: "minute "
-        },
-        axisY:{
-          interlacedColor: "#F8F1E4",
-          tickLength: 5,
-          prefix: "$",
-          gridThickness: 0
-        }
-      });
+window.onload = function () {
 
-      var xVal = 0;
-      var yVal = 100; 
-      var updateInterval = 1000;
-      var dataLength = 100; // number of dataPoints visible at any point
-      var color = 'orange';
-      var markerSize = 2;
-      var timeLeft = 100;
+    var data; // array of dataPoints
+    var xVal; // the x coordinate that datapoints will begin at
+    var yVal; // the y coordinate that datapoints will begin at
+    var updateInterval; // how frequently the chart will be updated (in milliseconds)
+    var dataLength; // number of dataPoints visible at any point
+    var pointColor; // the color of dataPoints on the chart
+    var markerSize; // the size of dataPoints on the chart
+    var gameTicks; //number of ticks the game should be played for, equivalent to game duration
 
-      var updateChart = function (count) {
+    var bitcoins; // Capital in BTC
+    var dollars; // Capital in USD
+    var usd_per_btc; // How many USD will 1 BTC cost
+    var btc_per_usd; // How many BTC will 1 USD cost
+
+    var chart; // the CanvasJS chart
+
+    var introPage = $("#introPage");
+    var profitPage = $("#profitPage");
+
+    CanvasJS.addColorSet("bitcoin_colors",
+            [//colorSet Array
+                "#FF9900"
+            ]);
+
+    function updateChart(count) {
         count = count || 1; // count is number of times loop runs to generate random dataPoints.
-        
-        for (var j = 0; j < count; j++) { 
-          yVal = Math.max(yVal +  Math.round(5 + Math.random() *(-5-5)), 0);
-          dps.push({
-            x: xVal,
-            y: yVal,
-            color: color,
-            markerSize: markerSize,
-          });
-          xVal++;
-        };
 
-        if (dps.length > dataLength) {
-          dps.shift();        
+        var randomNum;
+        for (var j = 0; j < count; j++) {
+            randomNum = Math.round((Math.random() * 10) - 5);
+            yVal = Math.max(yVal + randomNum, 0);
+            data.push({
+                x: xVal,
+                y: yVal,
+                color: pointColor,
+                markerSize: markerSize
+            });
+            xVal++;
         }
-        
+        if (data.length > dataLength) {
+            data.shift();
+        }
+
         chart.render();
 
-        color = 'orange';
+        pointColor = 'orange';
         markerSize = 1;
-            
-      };
+    }
 
-      var bitcoins = 0; // Capital in BTC
-      var dollars = 10000; // Capital in USD
-      var usd_to_btc = 100; // The ratio of USD to BTC. So $650:1 BTC = 650
-      var btc_to_usd = 1/usd_to_btc;
-      var exchange_worth = function(amount, exchange_rate) {
+
+    function exchangeWorth(amount, exchange_rate) {
         return amount * exchange_rate;
-      };
+    }
 
-      var updateHoldings = function () {
+    function updateHoldings() {
         if (bitcoins == 0) {
-          bitcoins = dollars / usd_to_btc;
-          dollars = 0;
+            bitcoins = dollars / usd_per_btc;
+            dollars = 0;
         } else if (dollars == 0) {
-          dollars = bitcoins * usd_to_btc;
-          bitcoins = 0;
-        };
+            dollars = bitcoins * usd_per_btc;
+            bitcoins = 0;
+        }
 
         // $("#bitcoins").text(dps[dps.length-1].y)
         $("#bitcoins").text(bitcoins.toFixed(2) + " BTC");
         $("#dollars").text(dollars.toFixed(2) + " USD");
-      };
+    }
 
 
+    // Color conversions
+    function componentToHex(c) {
+        var hex = c.toString(16);
+        return hex.length == 1 ? "0" + hex : hex;
+    }
 
-      var globalID;
-
-      (function() {
-          var lastTime = 0;
-          var vendors = ['ms', 'moz', 'webkit', 'o'];
-          for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
-              window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
-              window.cancelAnimationFrame = window[vendors[x]+'CancelAnimationFrame'] 
-                                         || window[vendors[x]+'CancelRequestAnimationFrame'];
-          }
-       
-          if (!window.requestAnimationFrame)
-              window.requestAnimationFrame = function(callback, element) {
-                  var currTime = new Date().getTime();
-                  var timeToCall = Math.max(0, 16 - (currTime - lastTime));
-                  var id = window.setTimeout(function() { callback(currTime + timeToCall); }, 
-                    timeToCall);
-                  lastTime = currTime + timeToCall;
-                  return id;
-              };
-       
-          if (!window.cancelAnimationFrame)
-              window.cancelAnimationFrame = function(id) {
-                  clearTimeout(id);
-              };
-      }());
+    function rgbToHex(r, g, b) {
+        return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+    }
 
 
-
-      // Color conversions
-      function componentToHex(c) {
-          var hex = c.toString(16);
-          return hex.length == 1 ? "0" + hex : hex;
-      };
-
-      function rgbToHex(r, g, b) {
-          return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
-      };
-
-
-
-      // Animations
-      function animate() {
-        // alert("I am an alert box!");
-        // $("#chartContainer").toggle()
-        updateInterval = 1000 / $("#speedSlider").val(); // Should really be a slider event, but it wasn't working...
+    // Animations
+    function animate(timeLeft) {
         updateChart();
 
-        usd_to_btc = Math.max(dps[dps.length-1].y, 1); // dirty dirty hack to avoid infinity values 
-        btc_to_usd = 1/usd_to_btc;
+        usd_per_btc = Math.max(data[data.length - 1].y, 0.0001); // dirty dirty hack to avoid infinity values
+        btc_per_usd = 1 / usd_per_btc;
 
 
-        timeLeftColor = rgbToHex(255 * (1000 - timeLeft) / 1000, 255 * timeLeft / 1000, 0);
-        timeLeft = 1000 - dps[dps.length-1].x;
-        $("#timeLeft").text(timeLeft);
-        $("#timeLeft").css('color', timeLeftColor);
+        var timeLeftColor = rgbToHex(255 * (1000 - timeLeft) / 1000, 255 * timeLeft / 1000, 0);
+        var timeLeftSelector = $("#timeLeft");
+        timeLeftSelector.text(timeLeft);
+        timeLeftSelector.css('color', timeLeftColor);
 
-        $("#chartContainer").toggle(); // These two actually work!
-        $("#chartContainer").toggle(); // They redraw the canvas on android
+        var chartContainer = $("#chartContainer");
 
         if (timeLeft > 0) {
-          setTimeout(function() {globalID = requestAnimationFrame(animate);}, updateInterval);
+            setTimeout(function () {
+                animate(timeLeft - 1);
+            }, updateInterval);
         } else {
-          $("#profit").text((dollars + exchange_worth(bitcoins, usd_to_btc) - 10000) + " USD"); //update profit
-          // $("#popupLink").click(); // clicks the hidden link and triggers the popup
-          $("#profitPage").popup();
-          $("#profitPage").popup("open");
-          // $.mobile.changePage('#profitPage', 'pop', false, false);
-        };
-        
-      }
+            $("#profit").text((dollars + exchangeWorth(bitcoins, usd_per_btc) - 10000) + " USD"); //update profit
+            var profitPage = $("#profitPage");
+            profitPage.popup("open");
+        }
 
-      $("#start").on("click", function() {
-        // globalID = requestAnimationFrame(animate);
-        color = 'green';
+
+    }
+
+    $("#start").on("click", function () {
+        pointColor = 'green';
         markerSize = 6;
         updateHoldings();
         $("#start").toggle();
         $("#stop").toggle();
         $("#dollars").toggle();
         $("#bitcoins").toggle();
-      });
+    });
 
-      $("#stop").on("click", function() {
-        // cancelAnimationFrame(globalID);
-        color = 'red';
+    $("#stop").on("click", function () {
+        pointColor = 'red';
         markerSize = 6;
         updateHoldings();
         $("#start").toggle();
         $("#stop").toggle();
         $("#dollars").toggle();
         $("#bitcoins").toggle();
-      });
+    });
 
-      $("#backButton").on("click", function() {
-        location.reload();
-      });
+    $("#introCloseButton").on("click", function () {
+        introPage.popup("close");
+        introPage.popup("close");
+    });
+    $("#profitCloseButton").on("click", function () {
+        profitPage.popup("close");
+        profitPage.popup("close");
+    });
 
-      $( "#profitPage" ).bind({
-         popupafterclose: function(event, ui) {
-          resetGame();
-         }
-      });
 
 
-      // updateChart(dataLength);
-      // globalID = requestAnimationFrame(animate);
-      function resetGame() {
-        dps = []; // dataPoints
-        timeLeft = 1000;  
+    introPage.bind({
+        popupafterclose: function (event, ui) {
+            resetGame([], 300, 0, 100, 100, 200, 'orange', 2, 0, 10000, 100);
+            startGame(gameTicks);
+        }
+    });
+    profitPage.bind({
+        popupafterclose: function (event, ui) {
+            resetGame([], 300, 0, 100, 100, 200, 'orange', 2, 0, 10000, 100);
+            startGame(gameTicks);
+        }
+    });
 
-        xVal = 0;
-        yVal = 100; 
-        updateInterval = 1000;
-        dataLength = 100; // number of dataPoints visible at any point
-        color = 'orange';
-        markerSize = 2;
+    function startGame(numTicks) {
+        updateChart(dataLength);
+        animate(numTicks);
+    }
 
-        bitcoins = 0; // Capital in BTC
-        dollars = 10000; // Capital in USD
-        usd_to_btc = 100; // The ratio of USD to BTC. So $650:1 BTC = 650
-        btc_to_usd = 1/usd_to_btc;
+    function resetGame(dataParam, gameTicksParam, xValParam, yValParam, updateIntervalParam, dataLengthParam,
+                       colorParam, markerSizeParam, bitcoinsParam, dollarsParam, usd_to_btcParam) {
+
+        data = dataParam;
+        gameTicks = gameTicksParam;
+        xVal = xValParam;
+        yVal = yValParam;
+        updateInterval = updateIntervalParam;
+        dataLength = dataLengthParam;
+        pointColor = colorParam;
+        markerSize = markerSizeParam;
+        bitcoins = bitcoinsParam;
+        dollars = dollarsParam;
+        usd_per_btc = usd_to_btcParam;
+        btc_per_usd = 1 / usd_per_btc;
+
+        chart = new CanvasJS.Chart("chartContainer", {
+//        title :{
+//           text: "Bitcoin Rollercoaster"
+//        },
+            creditText: "",
+            creditHref: "",
+            colorSet: "bitcoin_colors",
+            data: [
+                {
+                    type: "spline",
+                    dataPoints: data,
+                    toolTipContent: "${y}",
+                    lineThickness: 2,
+                    markerSize: 2
+                }
+            ],
+            toolTip: {
+                animationEnabled: false
+            },
+            axisX: {
+                // title: "Minutes",
+                // gridThickness: 1,
+                tickLength: 5,
+                // prefix: "test"
+                interval: 100,
+                prefix: "minute "
+            },
+            axisY: {
+                interlacedColor: "#F8F1E4",
+                tickLength: 5,
+                prefix: "$",
+                gridThickness: 0
+            }
+        });
+
 
         $("#stop").hide();
         $("#bitcoins").hide();
-        setTimeout(function() {globalID = requestAnimationFrame(animate);}, updateInterval);
-      };
+        $("#start").show();
+        $("#dollars").show();
+    }
 
-      $("#stop").hide();
-      $("#bitcoins").hide();
-      globalID = requestAnimationFrame(animate);
-    } 
-  </script>
+    introPage.popup("open");
+
+    resetGame([], 300, 0, 100, 100, 200, 'orange', 2, 0, 10000, 100);
+//    startGame(1);
+    updateChart(dataLength);
+}
+</script>
 
 </body>
 </html>
