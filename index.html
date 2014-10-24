@@ -204,8 +204,8 @@ window.onload = function () {
             }, updateInterval);
         } else {
             $("#profit").text((dollars + exchangeWorth(bitcoins, usd_per_btc) - 10000) + " USD"); //update profit
-            var profitPage = $("#profitPage");
-            profitPage.popup("open");
+            profitPage.popup(); // inits the popup
+            profitPage.popup("open"); // opens the popup
         }
 
 
@@ -233,7 +233,7 @@ window.onload = function () {
 
     $("#introCloseButton").on("click", function () {
         introPage.popup("close");
-//        introPage.popup("close");
+        introPage.popup("close");
     });
     $("#profitCloseButton").on("click", function () {
         profitPage.popup("close");
@@ -318,10 +318,10 @@ window.onload = function () {
         $("#dollars").show();
     }
 
-    introPage.popup("open");
+    introPage.popup(); //inits the popup
+    introPage.popup("open"); //opens the popup
 
     resetGame([], 300, 0, 100, 100, 200, 'orange', 2, 0, 10000, 100);
-//    startGame(1);
     updateChart(dataLength);
 }
 </script>
