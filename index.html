@@ -62,7 +62,8 @@
                     <img src="images/bitcoin-roller-coaster.gif" alt="To the moon!!! ┗(°0°)┛" height="100px" width="100px" >
                 </p>
 
-                <a href="#" data-rel="button" data-role="button" data-inline="false" id="introCloseButton">I want to take a ride!</a>
+                <!--<a href="" data-rel="button" data-role="button" data-inline="false" id="introCloseButton">I want to take a ride!</a>-->
+                <button data-inline="false" id="introCloseButton">I want to take a ride!</button>
             </div>
             <!-- /content -->
         </div>
@@ -81,7 +82,8 @@
                 <p style="text-align:center" id="profit_container">
                     <font color="black" id="profit">0 BTC</font>
                 </p>
-                <a href="#" data-rel="back" data-role="button" data-inline="false" data-icon="back" id="profitCloseButton">I want to ride again!</a>
+                <!--<a href="" data-rel="back" data-role="button" data-inline="false" data-icon="back" id="profitCloseButton">I want to ride again!</a>-->
+                <button data-inline="false" data-icon="back" id="profitCloseButton">I want to ride again!</button>
             </div>
             <!-- /content -->
         </div>
@@ -121,6 +123,9 @@ window.onload = function () {
 
     var introPage = $("#introPage");
     var profitPage = $("#profitPage");
+    introPage.popup({ history: false });
+    profitPage.popup({ history: false });
+    $.mobile.popup.prototype.options.history = false;
 
     CanvasJS.addColorSet("bitcoin_colors",
             [//colorSet Array
@@ -204,8 +209,8 @@ window.onload = function () {
             }, updateInterval);
         } else {
             $("#profit").text((dollars + exchangeWorth(bitcoins, usd_per_btc) - 10000) + " USD"); //update profit
-            var profitPage = $("#profitPage");
-            profitPage.popup("open");
+            profitPage.popup(); // inits the popup
+            profitPage.popup("open"); // opens the popup
         }
 
 
@@ -237,7 +242,7 @@ window.onload = function () {
     });
     $("#profitCloseButton").on("click", function () {
         profitPage.popup("close");
-        profitPage.popup("close");
+//        profitPage.popup("close");
     });
 
 
@@ -254,6 +259,7 @@ window.onload = function () {
             startGame(gameTicks);
         }
     });
+
 
     function startGame(numTicks) {
         updateChart(dataLength);
@@ -318,10 +324,10 @@ window.onload = function () {
         $("#dollars").show();
     }
 
-    introPage.popup("open");
+    introPage.popup(); //inits the popup
+    introPage.popup("open"); //opens the popup
 
     resetGame([], 300, 0, 100, 100, 200, 'orange', 2, 0, 10000, 100);
-//    startGame(1);
     updateChart(dataLength);
 }
 </script>
