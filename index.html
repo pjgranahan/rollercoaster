@@ -105,8 +105,6 @@
 
 window.onload = function () {
 
-    $.mobile.popup.prototype.options.history = false;
-
     var data; // array of dataPoints
     var xVal; // the x coordinate that datapoints will begin at
     var yVal; // the y coordinate that datapoints will begin at
@@ -125,6 +123,9 @@ window.onload = function () {
 
     var introPage = $("#introPage");
     var profitPage = $("#profitPage");
+    introPage.popup({ history: false });
+    profitPage.popup({ history: false });
+    $.mobile.popup.prototype.options.history = false;
 
     CanvasJS.addColorSet("bitcoin_colors",
             [//colorSet Array
@@ -252,26 +253,13 @@ window.onload = function () {
             startGame(gameTicks);
         }
     });
-    introPage.on('popupafteropen', function () {
-        $(this).one('popupafterclose', function () {
-            $(window).one('navigate.popup', function (e) {
-                e.preventDefault();
-            });
-        });
-    });
     profitPage.bind({
         popupafterclose: function (event, ui) {
             resetGame([], 300, 0, 100, 100, 200, 'orange', 2, 0, 10000, 100);
             startGame(gameTicks);
         }
     });
-    profitPage.on('popupafteropen', function () {
-        $(this).one('popupafterclose', function () {
-            $(window).one('navigate.popup', function (e) {
-                e.preventDefault();
-            });
-        });
-    });
+
 
     function startGame(numTicks) {
         updateChart(dataLength);
