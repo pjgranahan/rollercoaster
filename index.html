@@ -105,6 +105,8 @@
 
 window.onload = function () {
 
+    $.mobile.popup.prototype.options.history = false;
+
     var data; // array of dataPoints
     var xVal; // the x coordinate that datapoints will begin at
     var yVal; // the y coordinate that datapoints will begin at
