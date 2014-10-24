@@ -282,6 +282,8 @@ window.onload = function () {
         usd_per_btc = usd_to_btcParam;
         btc_per_usd = 1 / usd_per_btc;
 
+        updateHoldings();
+
         chart = new CanvasJS.Chart("chartContainer", {
 //        title :{
 //           text: "Bitcoin Rollercoaster"
