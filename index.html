@@ -252,11 +252,25 @@ window.onload = function () {
             startGame(gameTicks);
         }
     });
+    introPage.on('popupafteropen', function () {
+        $(this).one('popupafterclose', function () {
+            $(window).one('navigate.popup', function (e) {
+                e.preventDefault();
+            });
+        });
+    });
     profitPage.bind({
         popupafterclose: function (event, ui) {
             resetGame([], 300, 0, 100, 100, 200, 'orange', 2, 0, 10000, 100);
             startGame(gameTicks);
         }
+    });
+    profitPage.on('popupafteropen', function () {
+        $(this).one('popupafterclose', function () {
+            $(window).one('navigate.popup', function (e) {
+                e.preventDefault();
+            });
+        });
     });
 
     function startGame(numTicks) {
