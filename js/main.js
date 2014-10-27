@@ -18,6 +18,8 @@ window.onload = function () {
 
     var introPage = $("#introPage");
     var profitPage = $("#profitPage");
+
+    // these make sure that the buttons don't act as back buttons
     introPage.popup({ history: false });
     profitPage.popup({ history: false });
     $.mobile.popup.prototype.options.history = false;

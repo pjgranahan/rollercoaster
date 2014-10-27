@@ -960,7 +960,7 @@ legend, .ui-input-text input, .ui-input-search input {
 }
 
 .ui-icon-loading {
-    background: url(images/ajax-loader.gif);
+    background: url(./img/ajax-loader.gif);
     background-size: 2.875em 2.875em
 }
 
